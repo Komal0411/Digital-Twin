@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Behavior Digital Twin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+<h2 class="text-center mb-4">Behavior Digital Twin</h2>
+
+<div class="card p-4 mb-4">
+<form method="POST">
+    <label>Productivity Score</label>
+    <input name="productivity" type="number" step="0.1" class="form-control mb-3" required>
+
+    <label>Social Interactions</label>
+    <input name="social" type="number" class="form-control mb-3" required>
+
+    <label>Habits</label>
+    <input name="habits" type="number" class="form-control mb-3" required>
+
+    <label>Emotional Score</label>
+    <input name="emotional" type="number" step="0.1" class="form-control mb-3" required>
+
+    <button class="btn btn-danger btn-lg w-100">Submit</button>
+</form>
+</div>
+
+{% if predicted_score %}
+<div class="card p-3 text-center mb-4">
+    <h4>Predicted Behavior Score</h4>
+    <h1 class="text-danger">{{ predicted_score }}</h1>
+    <ul class="text-start mt-3">
+        {% for r in recommendations %}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if graphJSON %}
+<div class="card p-3">
+    <div id="behaviorGraph"></div>
+</div>
+
+<script>
+var fig = {{ graphJSON | safe }};
+Plotly.newPlot("behaviorGraph", fig.data, fig.layout, {responsive:true});
+</script>
+{% endif %}
+
+</div>
+</body>
+</html>

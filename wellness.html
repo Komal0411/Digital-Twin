@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wellness Digital Twin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+<h2 class="text-center mb-4">Wellness Digital Twin</h2>
+
+<div class="card p-4 mb-4">
+<form method="POST">
+    <label>Sleep Hours</label>
+    <input name="sleep" type="number" step="0.1" class="form-control mb-3" required>
+
+    <label>Exercise Hours</label>
+    <input name="exercise" type="number" step="0.1" class="form-control mb-3" required>
+
+    <label>Mood (1–10)</label>
+    <input name="mood" type="number" min="1" max="10" class="form-control mb-3" required>
+
+    <label>Wellness Index</label>
+    <input name="wellness_index" type="number" step="0.1" class="form-control mb-3" required>
+    <label>Stress Level (1–10)</label><input name="stress" type="number" min="1" max="10" class="form-control mb-3" required>
+
+
+    <button class="btn btn-warning btn-lg w-100">Submit</button>
+</form>
+</div>
+
+{% if predicted_score %}
+<div class="card p-3 text-center mb-4">
+    <h4>Predicted Wellness Score</h4>
+    <h1 class="text-warning">{{ predicted_score }}</h1>
+    <ul class="text-start mt-3">
+        {% for r in recommendations %}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if graphJSON %}
+<div class="card p-3">
+    <div id="wellnessGraph"></div>
+</div>
+
+<script>
+var fig = {{ graphJSON | safe }};
+Plotly.newPlot("wellnessGraph", fig.data, fig.layout, {responsive:true});
+</script>
+{% endif %}
+
+</div>
+</body>
+</html>
